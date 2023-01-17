@@ -4,10 +4,19 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/mercadolibre/golang-restclient/rest"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetCountryRestError(t *testing.T) {
+	rest.StartMockupServer()
+
+	rest.AddMockups(&rest.Mock{
+		URL:          "https://api.mercadolibre.com/countries/AR",
+		HTTPMethod:   http.MethodGet,
+		RespHTTPCode: 0,
+	})
+
 	// Execution:
 	country, err := GetCountry("AR")
 
@@ -19,6 +28,14 @@ func TestGetCountryRestError(t *testing.T) {
 }
 
 func TestGetCountryNotFound(t *testing.T) {
+	rest.StartMockupServer()
+
+	rest.AddMockups(&rest.Mock{
+		URL:          "https://api.mercadolibre.com/countries/AR",
+		HTTPMethod:   http.MethodGet,
+		RespHTTPCode: http.StatusNotFound,
+		RespBody:     `{"message": "Country not found", "error": "not_found", "status": 404, "cause": []}`,
+	})
 	// Execution:
 	country, err := GetCountry("AR")
 
@@ -30,6 +47,7 @@ func TestGetCountryNotFound(t *testing.T) {
 }
 
 func TestGetCountryInvalidErrorInterface(t *testing.T) {
+	rest.StartMockupServer()
 	// Execution:
 	country, err := GetCountry("AR")
 
@@ -41,6 +59,15 @@ func TestGetCountryInvalidErrorInterface(t *testing.T) {
 }
 
 func TestGetCountryInvalidJsonResponse(t *testing.T) {
+	rest.StartMockupServer()
+    
+    rest.AddMockups(&rest.Mock{
+		URL:          "https://api.mercadolibre.com/countries/AR",
+		HTTPMethod:   http.MethodGet,
+		RespHTTPCode: http.StatusOK,
+		RespBody:     `{"id": 0,"name": "Argentina","locale": "es_AR","currency_id": "ARS","decimal_separator": ",","thousands_separator": ".","time_zone": "GMT-03:00","geo_information": {},"states": []}`,
+	})
+
 	// Execution:
 	country, err := GetCountry("AR")
 
@@ -52,6 +79,7 @@ func TestGetCountryInvalidJsonResponse(t *testing.T) {
 }
 
 func TestGetCountryNoError(t *testing.T) {
+	rest.StartMockupServer()
 	// Execution:
 	country, err := GetCountry("AR")
 
