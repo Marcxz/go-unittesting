@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+
 func TestGetCountryRestError(t *testing.T) {
 	rest.StartMockupServer()
 
@@ -60,8 +61,8 @@ func TestGetCountryInvalidErrorInterface(t *testing.T) {
 
 func TestGetCountryInvalidJsonResponse(t *testing.T) {
 	rest.StartMockupServer()
-    
-    rest.AddMockups(&rest.Mock{
+
+	rest.AddMockups(&rest.Mock{
 		URL:          "https://api.mercadolibre.com/countries/AR",
 		HTTPMethod:   http.MethodGet,
 		RespHTTPCode: http.StatusOK,
@@ -80,6 +81,14 @@ func TestGetCountryInvalidJsonResponse(t *testing.T) {
 
 func TestGetCountryNoError(t *testing.T) {
 	rest.StartMockupServer()
+
+	rest.AddMockups(&rest.Mock{
+		URL:          "https://api.mercadolibre.com/countries/AR",
+		HTTPMethod:   http.MethodGet,
+		RespHTTPCode: http.StatusOK,
+		RespBody:     `{"id": "AR","name": "Argentina","locale": "es_AR","currency_id": "ARS","decimal_separator": ",","thousands_separator": ".","time_zone": "GMT-03:00","geo_information": {},"states": []}`,
+	})
+
 	// Execution:
 	country, err := GetCountry("AR")
 

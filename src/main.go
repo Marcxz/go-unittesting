@@ -1,13 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"unitesttraining/src/api/providers/locations_provider"
+	"unitesttraining/src/api/app"
 )
 
 func main() {
-	country, err := locations_provider.GetCountry("AR")
-
-	fmt.Println(err)
-	fmt.Println(country)
+	app.StartApp()
 }
