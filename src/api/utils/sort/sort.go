@@ -2,7 +2,6 @@ package sort
 
 import (
 	"sort"
-	_ "sort"
 )
 
 func BubbleSort(elements []int) {
